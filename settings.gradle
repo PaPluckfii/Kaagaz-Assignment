@@ -1,0 +1,2 @@
+rootProject.name = "KaagazCameraAssignment"
+include ':app'
