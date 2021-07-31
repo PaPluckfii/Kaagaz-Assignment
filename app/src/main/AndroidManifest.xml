@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KaagazCameraAssignment">
-        <activity android:name=".view.album.AlbumActivity"></activity>
+        <activity android:name=".view.home.HomeActivity"></activity>
+        <activity android:name=".view.album.AlbumActivity" />
         <activity android:name=".view.camera.CameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
