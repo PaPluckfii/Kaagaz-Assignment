@@ -1,11 +1,15 @@
 package com.sumeet.kaagazcameraassignment.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import com.sumeet.kaagazcameraassignment.data.AlbumDao
+import com.sumeet.kaagazcameraassignment.data.AlbumDatabase
 import com.sumeet.kaagazcameraassignment.data.AlbumEntity
 import com.sumeet.kaagazcameraassignment.data.PictureEntity
 
-class AlbumRepository(private val albumDao: AlbumDao) {
+class AlbumRepository(context: Context) {
+
+    private val albumDao = AlbumDatabase.getInstance(context).albumDao()
 
     suspend fun getAllAlbums() : List<AlbumEntity>{
         return albumDao.getAll()
