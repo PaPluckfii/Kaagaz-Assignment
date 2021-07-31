@@ -1,52 +1,76 @@
 package com.sumeet.kaagazcameraassignment.view.camera
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.sumeet.kaagazcameraassignment.databinding.ActivityCameraBinding
+import com.sumeet.kaagazcameraassignment.view.album.AlbumActivity
 import java.io.File
 
-class CameraActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var binding : ActivityCameraBinding
-    private lateinit var camera : Camera
-    private lateinit var preview : Preview
+/**
+ * Constants
+ */
+private const val REQUEST_CODE_PERMISSIONS = 0
+private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+private const val TIMER_FLAG = 500L
+
+/**
+ * This is the camera activity to capture pictures.
+ */
+class CameraActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCameraBinding
+    private lateinit var camera: Camera
+    private lateinit var preview: Preview
     private lateinit var imageCapture: ImageCapture
-    private var cameraSelector : CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.root.postDelayed(
+            Runnable { hideUI() },
+            TIMER_FLAG
+        )
+
         checkCameraPermission()
 
-        binding.btnCapture.setOnClickListener {
-            takePhoto()
-        }
+        handleClicks()
 
     }
 
     private fun takePhoto() {
-        val photoFile = File(externalMediaDirs.firstOrNull(),"KaagazAssignment_${System.currentTimeMillis()}.jpg")
+        val photoFile = File(
+            externalMediaDirs.firstOrNull(),
+            "KaagazAssignment_${System.currentTimeMillis()}.jpg"
+        )
         val output = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         imageCapture.takePicture(
             output,
             ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback{
+            object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    Toast.makeText(baseContext,"Image Saved",Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@CameraActivity, AlbumActivity::class.java)
+                    //TODO pass data
+                    startActivity(intent)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(baseContext,"Sorry, Please try again",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Sorry, Please try again", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
             }
@@ -54,13 +78,14 @@ class CameraActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun checkCameraPermission() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             startCamera()
-        }else{
+        } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.CAMERA),
+                REQUIRED_PERMISSIONS,
                 REQUEST_CODE_PERMISSIONS
             )
         }
@@ -72,15 +97,27 @@ class CameraActivity : AppCompatActivity(), View.OnClickListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             startCamera()
-        }else{
-            Toast.makeText(this,"Camera Permission Needed",Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Camera Permission Needed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun hideUI() {
+        //hiding systemUI
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, binding.root).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 
     private fun startCamera() {
+
         //listener to check is camera bind
         val cameraProviderListener = ProcessCameraProvider.getInstance(this)
         cameraProviderListener.addListener(
@@ -104,19 +141,25 @@ class CameraActivity : AppCompatActivity(), View.OnClickListener {
         )
     }
 
-    override fun onClick(v: View?) {
-        when(v){
-            binding.btnCapture ->{
-                //TODO CLICK
-            }
+    /**
+     * Function to handle clicks
+     */
+    private fun handleClicks() {
+        binding.btnCapture.setOnClickListener {
+            takePhoto()
         }
-    }
-
-    companion object {
-        private const val TAG = "CameraXBasic"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 0
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        binding.btnFlipCam.setOnClickListener {
+            cameraSelector = if (CameraSelector.DEFAULT_BACK_CAMERA == cameraSelector) {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            } else {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            }
+            startCamera()
+        }
+        binding.btnGallery.setOnClickListener {
+            val intent = Intent(this, AlbumActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }
