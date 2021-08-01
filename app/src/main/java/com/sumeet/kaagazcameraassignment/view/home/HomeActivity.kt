@@ -23,7 +23,7 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
     private lateinit var binding : ActivityHomeBinding
     private lateinit var adapter : AlbumsAdapter
     private val viewModel : HomeViewModel by viewModels()
-    private lateinit var listOfAlbums : List<AlbumEntity>
+    private var listOfAlbums : List<AlbumEntity> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -22,7 +22,7 @@ class HomeViewModel@Inject constructor(
     fun getAllAlbums() : LiveData<List<AlbumEntity>>{
         var list = MutableLiveData<List<AlbumEntity>>()
         viewModelScope.launch(dispatchers.io){
-            list = repository.getAllAlbums()
+            list.postValue(repository.getAllAlbums().value)
         }
         return list
     }

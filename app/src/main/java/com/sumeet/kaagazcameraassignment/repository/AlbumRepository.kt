@@ -13,11 +13,11 @@ class AlbumRepository @Inject constructor(private val context: Context) {
 
     private val albumDao = AlbumDatabase.getInstance(context).albumDao()
 
-    suspend fun getAllAlbums() : MutableLiveData<List<AlbumEntity>>{
+    fun getAllAlbums() : LiveData<List<AlbumEntity>> {
         return albumDao.getAll()
     }
 
-    suspend fun getAllPictures(albumId : Int) : MutableLiveData<List<PictureEntity>>{
+    fun getAllPictures(albumId : Int) : LiveData<List<PictureEntity>> {
         return albumDao.getPicturesForAlbum(albumId)
     }
 

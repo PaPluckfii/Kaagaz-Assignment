@@ -1,6 +1,6 @@
 package com.sumeet.kaagazcameraassignment.data
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -13,9 +13,9 @@ interface AlbumDao{
     suspend fun insertPicture(pictureEntity: PictureEntity)
 
     @Query("SELECT * FROM album_table")
-    suspend fun getAll() : MutableLiveData<List<AlbumEntity>>
+    fun getAll() : LiveData<List<AlbumEntity>>
 
     @Query("SELECT * FROM picture_table WHERE album_id = :albumId")
-    suspend fun getPicturesForAlbum(albumId : Int) : MutableLiveData<List<PictureEntity>>
+    fun getPicturesForAlbum(albumId : Int) : LiveData<List<PictureEntity>>
 
 }

@@ -21,7 +21,7 @@ class CameraViewModel @Inject constructor(
     fun getImageList(id : Int) : LiveData<List<PictureEntity>>{
         var list = MutableLiveData<List<PictureEntity>>()
         viewModelScope.launch(dispatchers.io) {
-            list = (repository.getAllPictures(id))
+            list = (repository.getAllPictures(id) as MutableLiveData<List<PictureEntity>>)
         }
         return list
     }
