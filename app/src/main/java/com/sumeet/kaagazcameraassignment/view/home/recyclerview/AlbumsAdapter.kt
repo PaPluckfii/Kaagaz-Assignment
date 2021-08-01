@@ -1,5 +1,6 @@
 package com.sumeet.kaagazcameraassignment.view.home.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ class AlbumsAdapter(
     }
 
     override fun getItemCount(): Int {
+        Log.d("recycler","Size ${list.size}")
         return list.size
     }
 }

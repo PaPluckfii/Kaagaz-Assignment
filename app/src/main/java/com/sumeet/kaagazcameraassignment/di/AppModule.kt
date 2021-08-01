@@ -2,6 +2,10 @@ package com.sumeet.kaagazcameraassignment.di
 
 import android.app.Application
 import android.content.Context
+import androidx.room.Room
+import com.sumeet.kaagazcameraassignment.data.AlbumDao
+import com.sumeet.kaagazcameraassignment.data.AlbumDatabase
+import com.sumeet.kaagazcameraassignment.data.PictureDao
 import com.sumeet.kaagazcameraassignment.repository.AlbumRepository
 import com.sumeet.kaagazcameraassignment.util.DispatcherProvider
 import dagger.Module
@@ -22,7 +26,20 @@ object AppModule{
 
     @Singleton
     @Provides
-    fun provideAlbumRepository(context: Context) : AlbumRepository = AlbumRepository(context)
+    fun provideAlbumDatabase(context: Context) : AlbumDatabase {
+        return Room.databaseBuilder(
+            context,
+            AlbumDatabase::class.java,
+            "album_db"
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAlbumRepository(
+        albumDao: AlbumDao,
+        pictureDao: PictureDao
+    ) : AlbumRepository = AlbumRepository(albumDao,pictureDao)
 
     @Singleton
     @Provides

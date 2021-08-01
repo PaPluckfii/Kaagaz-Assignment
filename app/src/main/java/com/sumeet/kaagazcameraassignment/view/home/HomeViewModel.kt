@@ -1,6 +1,7 @@
 package com.sumeet.kaagazcameraassignment.view.home
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,10 +20,11 @@ class HomeViewModel@Inject constructor(
     private val dispatchers : DispatcherProvider
 ) : ViewModel() {
 
-    fun getAllAlbums() : LiveData<List<AlbumEntity>>{
-        var list = MutableLiveData<List<AlbumEntity>>()
+    fun getAllAlbums() : List<AlbumEntity>{
+        var list : List<AlbumEntity> = emptyList()
         viewModelScope.launch(dispatchers.io){
-            list.postValue(repository.getAllAlbums().value)
+            list = repository.getAllAlbums()
+            Log.d("inRepo","size = ${list.size}")
         }
         return list
     }

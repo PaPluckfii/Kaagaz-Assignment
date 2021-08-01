@@ -7,7 +7,7 @@ import java.io.Serializable
 
 @Entity(tableName = "picture_table")
 data class PictureEntity(
-    @ColumnInfo(name = "album_id") val albumId : Int?,
+    @ColumnInfo(name = "album_name") val albumName : String?,
     @ColumnInfo(name = "pic_name") var picName : String?,
     @ColumnInfo(name = "uri") var uri : String?
 ) : Serializable {

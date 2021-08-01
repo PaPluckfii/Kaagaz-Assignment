@@ -83,7 +83,7 @@ class CameraActivity : AppCompatActivity() {
 
                     viewModel.insertCurrentImage(
                         PictureEntity(
-                            albumId = albumEntity.id,
+                            albumName = albumEntity.name,
                             picName = photoFile.name,
                             uri = outputFileResults.toString()
                         )
