@@ -23,7 +23,6 @@ class AlbumsAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.d("recycler","Size ${list.size}")
         return list.size
     }
 }

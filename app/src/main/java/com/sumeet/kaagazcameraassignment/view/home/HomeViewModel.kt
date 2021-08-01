@@ -20,19 +20,13 @@ class HomeViewModel@Inject constructor(
     private val dispatchers : DispatcherProvider
 ) : ViewModel() {
 
-    fun getAllAlbums() : List<AlbumEntity>{
-        var list : List<AlbumEntity> = emptyList()
-        viewModelScope.launch(dispatchers.io){
-            list = repository.getAllAlbums()
-            Log.d("inRepo","size = ${list.size}")
-        }
-        return list
-    }
+    private val resultList : MutableLiveData<List<AlbumEntity>> = MutableLiveData()
 
-    fun createAlbum(albumEntity: AlbumEntity){
-        viewModelScope.launch(dispatchers.io) {
-            repository.insertAlbum(albumEntity)
+    fun getAllAlbums() : MutableLiveData<List<AlbumEntity>>{
+        viewModelScope.launch(dispatchers.io){
+            resultList.postValue(repository.getAllAlbums())
         }
+        return resultList
     }
 
     fun insertNewAlbum(albumEntity: AlbumEntity) {

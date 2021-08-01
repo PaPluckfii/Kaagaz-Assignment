@@ -7,8 +7,8 @@ import java.io.Serializable
 
 @Entity(tableName = "album_table")
 data class AlbumEntity(
-    @ColumnInfo(name = "album_name") var name : String?,
-    @ColumnInfo(name = "timestamp") var timestamp : String?,
+    @ColumnInfo(name = "album_name") var name: String?,
+    @ColumnInfo(name = "timestamp") var timestamp: Long,
 ) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

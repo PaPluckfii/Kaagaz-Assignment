@@ -17,18 +17,24 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
 
     private lateinit var binding : ActivityHomeBinding
     private lateinit var albumsAdapter : AlbumsAdapter
+    private var albumList = arrayListOf<AlbumEntity>()
     private val viewModel : HomeViewModel by viewModels()
-    private var listOfAlbums : List<AlbumEntity> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setRecyclerView()
         binding.btnCreateNewAlbum.setOnClickListener {
             createNewAlbumDialog()
         }
+
+        setRecyclerView()
+
+        viewModel.getAllAlbums().observe(this, Observer {
+            resetRecyclerView(it)
+        })
+
     }
 
     private fun createNewAlbumDialog() {
@@ -37,12 +43,17 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
     }
 
     private fun setRecyclerView() {
-        listOfAlbums = viewModel.getAllAlbums()
-        albumsAdapter = AlbumsAdapter(listOfAlbums)
+        albumsAdapter = AlbumsAdapter(albumList)
         binding.albumRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = albumsAdapter
         }
+        albumsAdapter.notifyDataSetChanged()
+    }
+
+    private fun resetRecyclerView(list: List<AlbumEntity>) {
+        albumList.clear()
+        albumList.addAll(list)
         albumsAdapter.notifyDataSetChanged()
     }
 
@@ -51,8 +62,9 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
 
         val entity = AlbumEntity(
             name = name,
-            timestamp = "for now"
+            timestamp = System.currentTimeMillis()
         )
+
         viewModel.insertNewAlbum(entity)
 
         intent.putExtra(
@@ -62,4 +74,10 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
 
         startActivity(intent)
     }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
 }
