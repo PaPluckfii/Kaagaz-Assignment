@@ -2,20 +2,22 @@ package com.sumeet.kaagazcameraassignment.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sumeet.kaagazcameraassignment.data.AlbumDao
 import com.sumeet.kaagazcameraassignment.data.AlbumDatabase
 import com.sumeet.kaagazcameraassignment.data.AlbumEntity
 import com.sumeet.kaagazcameraassignment.data.PictureEntity
+import javax.inject.Inject
 
-class AlbumRepository(context: Context) {
+class AlbumRepository @Inject constructor(private val context: Context) {
 
     private val albumDao = AlbumDatabase.getInstance(context).albumDao()
 
-    suspend fun getAllAlbums() : List<AlbumEntity>{
+    suspend fun getAllAlbums() : MutableLiveData<List<AlbumEntity>>{
         return albumDao.getAll()
     }
 
-    suspend fun getAllPictures(albumId : Int) : List<PictureEntity>{
+    suspend fun getAllPictures(albumId : Int) : MutableLiveData<List<PictureEntity>>{
         return albumDao.getPicturesForAlbum(albumId)
     }
 

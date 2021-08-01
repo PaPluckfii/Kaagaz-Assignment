@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KaagazCameraAssignment</string>
+    <string name="new_album">New Album</string>
+    <string name="album_name">Album Name</string>
 </resources>

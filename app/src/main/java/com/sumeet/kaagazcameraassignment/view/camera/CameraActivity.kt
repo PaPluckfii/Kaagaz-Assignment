@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -13,10 +14,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
+import com.sumeet.kaagazcameraassignment.data.AlbumEntity
+import com.sumeet.kaagazcameraassignment.data.PictureEntity
 import com.sumeet.kaagazcameraassignment.databinding.ActivityCameraBinding
 import com.sumeet.kaagazcameraassignment.view.album.AlbumActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-
 
 /**
  * Constants
@@ -28,6 +32,7 @@ private const val TIMER_FLAG = 500L
 /**
  * This is the camera activity to capture pictures.
  */
+@AndroidEntryPoint
 class CameraActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCameraBinding
@@ -35,6 +40,10 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var preview: Preview
     private lateinit var imageCapture: ImageCapture
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private lateinit var albumEntity: AlbumEntity
+    private lateinit var listOFImages : List<PictureEntity>
+    private val viewModel : CameraViewModel by viewModels()
+    private lateinit var path : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,16 +55,22 @@ class CameraActivity : AppCompatActivity() {
             TIMER_FLAG
         )
 
+        albumEntity = intent.getSerializableExtra("currentAlbum") as AlbumEntity
+        //listOFImages = viewModel.getImageList(albumEntity.id)
+
         checkCameraPermission()
 
         handleClicks()
 
     }
 
+    /**
+     * Function to take picture
+     */
     private fun takePhoto() {
         val photoFile = File(
             externalMediaDirs.firstOrNull(),
-            "KaagazAssignment_${System.currentTimeMillis()}.jpg"
+            "KaagazAssignment_${albumEntity.name}_${System.currentTimeMillis()}.jpg"
         )
         val output = ImageCapture.OutputFileOptions.Builder(photoFile).build()
         imageCapture.takePicture(
@@ -64,7 +79,16 @@ class CameraActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val intent = Intent(this@CameraActivity, AlbumActivity::class.java)
-                    //TODO pass data
+                    intent.putExtra("currentAlbum",albumEntity)
+
+                    viewModel.insertCurrentImage(
+                        PictureEntity(
+                            albumId = albumEntity.id,
+                            picName = photoFile.name,
+                            uri = outputFileResults.toString()
+                        )
+                    )
+
                     startActivity(intent)
                 }
 
@@ -106,8 +130,10 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Function to hide SystemUI on regular interval of time.
+     */
     private fun hideUI() {
-        //hiding systemUI
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, binding.root).let { controller ->
             controller.hide(WindowInsetsCompat.Type.systemBars())
@@ -116,9 +142,10 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Function to start the camera
+     */
     private fun startCamera() {
-
-        //listener to check is camera bind
         val cameraProviderListener = ProcessCameraProvider.getInstance(this)
         cameraProviderListener.addListener(
             Runnable {
