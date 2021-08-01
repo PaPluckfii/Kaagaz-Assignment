@@ -11,6 +11,7 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -19,6 +20,7 @@ import com.sumeet.kaagazcameraassignment.data.AlbumEntity
 import com.sumeet.kaagazcameraassignment.data.PictureEntity
 import com.sumeet.kaagazcameraassignment.databinding.ActivityCameraBinding
 import com.sumeet.kaagazcameraassignment.view.album.AlbumActivity
+import com.sumeet.kaagazcameraassignment.view.image.ImageActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -78,14 +80,15 @@ class CameraActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    val intent = Intent(this@CameraActivity, AlbumActivity::class.java)
+                    val intent = Intent(this@CameraActivity, ImageActivity::class.java)
                     intent.putExtra("currentAlbum",albumEntity)
+                    intent.putExtra("currentImage",photoFile.name)
 
                     viewModel.insertCurrentImage(
                         PictureEntity(
                             albumName = albumEntity.name,
                             picName = photoFile.name,
-                            uri = outputFileResults.toString()
+                            uri = photoFile.toUri().toString()
                         )
                     )
 

@@ -18,12 +18,8 @@ class CameraViewModel @Inject constructor(
     private val dispatchers : DispatcherProvider
 ) : ViewModel() {
 
-    fun getImageList(albumName : String) : List<PictureEntity>{
-        var list : List<PictureEntity> = emptyList()
-        viewModelScope.launch(dispatchers.io) {
-            list = repository.getAllPictures(albumName)
-        }
-        return list
+    fun getImageList(albumName : String) : LiveData<List<PictureEntity>>{
+        return repository.getAllPictures(albumName)
     }
 
     fun insertCurrentImage(pictureEntity: PictureEntity) {

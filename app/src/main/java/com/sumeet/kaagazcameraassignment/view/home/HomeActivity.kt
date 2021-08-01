@@ -8,12 +8,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sumeet.kaagazcameraassignment.data.AlbumEntity
 import com.sumeet.kaagazcameraassignment.databinding.ActivityHomeBinding
+import com.sumeet.kaagazcameraassignment.view.album.AlbumActivity
 import com.sumeet.kaagazcameraassignment.view.camera.CameraActivity
+import com.sumeet.kaagazcameraassignment.view.home.recyclerview.AlbumItemClickListener
 import com.sumeet.kaagazcameraassignment.view.home.recyclerview.AlbumsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
+class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , AlbumItemClickListener {
 
     private lateinit var binding : ActivityHomeBinding
     private lateinit var albumsAdapter : AlbumsAdapter
@@ -32,7 +34,8 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
         setRecyclerView()
 
         viewModel.getAllAlbums().observe(this, Observer {
-            resetRecyclerView(it)
+            if(it != null)
+                resetRecyclerView(it)
         })
 
     }
@@ -43,7 +46,7 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
     }
 
     private fun setRecyclerView() {
-        albumsAdapter = AlbumsAdapter(albumList)
+        albumsAdapter = AlbumsAdapter(albumList,this)
         binding.albumRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = albumsAdapter
@@ -75,9 +78,10 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener {
         startActivity(intent)
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    override fun onItemClicked(albumEntity: AlbumEntity) {
+        val intent = Intent(this@HomeActivity , AlbumActivity::class.java)
+        intent.putExtra("currentAlbum",albumEntity)
+        startActivity(intent)
     }
 
 }

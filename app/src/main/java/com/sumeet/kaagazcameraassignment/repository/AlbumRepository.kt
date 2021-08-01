@@ -11,11 +11,11 @@ class AlbumRepository @Inject constructor(
     private val pictureDao: PictureDao
 ) {
 
-    suspend fun getAllAlbums() : List<AlbumEntity> {
+    fun getAllAlbums() : LiveData<List<AlbumEntity>> {
         return albumDao.getAll()
     }
 
-    suspend fun getAllPictures(albumName : String) : List<PictureEntity> {
+    fun getAllPictures(albumName : String) : LiveData<List<PictureEntity>> {
         return pictureDao.getPicturesForAlbum(albumName)
     }
 
@@ -25,6 +25,10 @@ class AlbumRepository @Inject constructor(
 
     suspend fun insertPictures(pictureEntity: PictureEntity){
         pictureDao.insertPicture(pictureEntity)
+    }
+
+    suspend fun getListOfPictures(albumName : String): List<PictureEntity> {
+        return pictureDao.getListOfPictures(albumName)
     }
 
 }
