@@ -3,6 +3,7 @@ package com.sumeet.kaagazcameraassignment.view.home
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , 
     private lateinit var albumsAdapter : AlbumsAdapter
     private var albumList = arrayListOf<AlbumEntity>()
     private val viewModel : HomeViewModel by viewModels()
+    private var thumbnailList = arrayListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +36,9 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , 
         setRecyclerView()
 
         viewModel.getAllAlbums().observe(this, Observer {
-            if(it != null)
+            if(it != null) {
                 resetRecyclerView(it)
+            }
         })
 
     }
@@ -46,7 +49,7 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , 
     }
 
     private fun setRecyclerView() {
-        albumsAdapter = AlbumsAdapter(albumList,this)
+        albumsAdapter = AlbumsAdapter(albumList,this, thumbnailList)
         binding.albumRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = albumsAdapter
@@ -55,9 +58,21 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , 
     }
 
     private fun resetRecyclerView(list: List<AlbumEntity>) {
-        albumList.clear()
-        albumList.addAll(list)
-        albumsAdapter.notifyDataSetChanged()
+        if(list.isEmpty()){
+            binding.llNoAlbums.visibility = View.VISIBLE
+        }else{
+            binding.llNoAlbums.visibility = View.GONE
+            albumList.clear()
+            albumList.addAll(list)
+
+            thumbnailList.clear()
+
+//            for(i in albumList){
+//                thumbnailList.add(viewModel.getThumbnail(i))
+//            }
+
+            albumsAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun getAlbumNameFromEditText(name: String) {

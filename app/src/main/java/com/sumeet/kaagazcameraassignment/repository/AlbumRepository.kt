@@ -27,8 +27,24 @@ class AlbumRepository @Inject constructor(
         pictureDao.insertPicture(pictureEntity)
     }
 
-    suspend fun getListOfPictures(albumName : String): List<PictureEntity> {
-        return pictureDao.getListOfPictures(albumName)
+    fun deleteImage(pictureEntity: PictureEntity) {
+        pictureDao.deleteImage(pictureEntity)
+    }
+
+    fun deleteAlbum(currentAlbum: AlbumEntity) {
+        albumDao.deleteAlbum(currentAlbum)
+    }
+
+    fun deleteImages(name: String?) {
+        pictureDao.deleteImages(name)
+    }
+
+    fun getListOfPics(name: String?): List<PictureEntity> {
+        return pictureDao.getListOfPics(name)
+    }
+
+    suspend fun getThumbnail(albumEntity: AlbumEntity) : List<String>{
+        return pictureDao.getThumbnail(albumEntity.name)
     }
 
 }

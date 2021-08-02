@@ -1,10 +1,7 @@
 package com.sumeet.kaagazcameraassignment.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface PictureDao {
@@ -15,7 +12,16 @@ interface PictureDao {
     @Query("SELECT * FROM picture_table WHERE album_name = :albumName")
     fun getPicturesForAlbum(albumName : String) : LiveData<List<PictureEntity>>
 
-    @Query("SELECT * FROM picture_table WHERE album_name = :albumName")
-    suspend fun getListOfPictures(albumName : String) : List<PictureEntity>
+    @Delete
+    fun deleteImage(pictureEntity: PictureEntity)
+
+    @Query("DELETE FROM picture_table WHERE album_name = :name")
+    fun deleteImages(name: String?)
+
+    @Query("SELECT * FROM picture_table WHERE album_name = :name")
+    fun getListOfPics(name: String?) : List<PictureEntity>
+
+    @Query("SELECT uri FROM picture_table WHERE album_name = :name")
+    suspend fun getThumbnail(name: String?) : List<String>
 
 }

@@ -1,8 +1,12 @@
 package com.sumeet.kaagazcameraassignment.view.album
 
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sumeet.kaagazcameraassignment.data.AlbumEntity
@@ -10,6 +14,8 @@ import com.sumeet.kaagazcameraassignment.data.PictureEntity
 import com.sumeet.kaagazcameraassignment.databinding.ActivityAlbumBinding
 import com.sumeet.kaagazcameraassignment.view.album.recyclerview.PictureItemClickListener
 import com.sumeet.kaagazcameraassignment.view.album.recyclerview.PicturesAdapter
+import com.sumeet.kaagazcameraassignment.view.camera.CameraActivity
+import com.sumeet.kaagazcameraassignment.view.image.ImageActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +27,7 @@ class AlbumActivity : AppCompatActivity() , PictureItemClickListener{
     private var pictureList = arrayListOf<PictureEntity>()
     private lateinit var currentAlbum : AlbumEntity
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlbumBinding.inflate(layoutInflater)
@@ -37,6 +44,21 @@ class AlbumActivity : AppCompatActivity() , PictureItemClickListener{
             })
         }
 
+        handleClicks()
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleClicks() {
+        binding.btnAddPicsAlbum.setOnClickListener {
+            val intent = Intent(this@AlbumActivity, CameraActivity::class.java)
+            intent.putExtra("currentAlbum",currentAlbum)
+            startActivity(intent)
+        }
+        binding.btnDeleteAlbum.setOnClickListener{
+            viewModel.deleteAlbum(currentAlbum)
+            finish()
+        }
     }
 
     private fun setRecyclerView() {
@@ -49,12 +71,19 @@ class AlbumActivity : AppCompatActivity() , PictureItemClickListener{
     }
 
     private fun resetRecyclerView(list: List<PictureEntity>) {
-        pictureList.clear()
-        pictureList.addAll(list)
-        picturesAdapter.notifyDataSetChanged()
+        if(list.isEmpty()){
+            binding.llNoAlbums.visibility = View.VISIBLE
+        }else {
+            binding.llNoAlbums.visibility = View.GONE
+            pictureList.clear()
+            pictureList.addAll(list)
+            picturesAdapter.notifyDataSetChanged()
+        }
     }
 
-    override fun onItemClicked(pictureEntity: PictureEntity) {
-        TODO("Not yet implemented")
+    override fun onItemClicked() {
+        val intent = Intent(this@AlbumActivity, ImageActivity::class.java)
+        intent.putExtra("currentAlbum", currentAlbum)
+        startActivity(intent)
     }
 }

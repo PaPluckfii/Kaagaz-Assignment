@@ -12,20 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/images_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/photo_view_pager"
-        app:layout_constraintStart_toStartOf="parent" />
+    
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cutout_safe_area"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/back_button"
+            android:id="@+id/btnBack"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="@dimen/_20sdp"
@@ -36,7 +30,7 @@
             android:src="@drawable/ic_baseline_arrow_back_24" />
 
         <ImageButton
-            android:id="@+id/delete_button"
+            android:id="@+id/btnDelete"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:background="@android:color/transparent"

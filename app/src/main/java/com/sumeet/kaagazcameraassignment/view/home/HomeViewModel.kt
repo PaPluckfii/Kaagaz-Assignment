@@ -30,4 +30,12 @@ class HomeViewModel@Inject constructor(
         }
     }
 
+//    fun getThumbnail(albumEntity: AlbumEntity): List<String> {
+//        var thumb = arrayListOf<String>()
+//        viewModelScope.launch(dispatchers.io) {
+//            thumb = repository.getThumbnail(albumEntity) as ArrayList<String>
+//        }
+//        return thumb
+//    }
+
 }

@@ -15,6 +15,11 @@ class PicturesViewHolder(
 
     fun setData(pictureEntity: PictureEntity){
         Glide.with(itemView).load(pictureEntity.uri?.toUri()).into(itemView.imageViewCard)
+
+        itemView.setOnClickListener{
+            listener.onItemClicked()
+        }
+
     }
 
 }

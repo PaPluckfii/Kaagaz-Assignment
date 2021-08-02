@@ -13,4 +13,7 @@ interface AlbumDao{
     @Query("SELECT * FROM album_table")
     fun getAll() : LiveData<List<AlbumEntity>>
 
+    @Delete
+    fun deleteAlbum(currentAlbum: AlbumEntity)
+
 }
