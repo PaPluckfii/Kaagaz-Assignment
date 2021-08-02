@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:layout_margin="@dimen/_5sdp"
+    android:elevation="@dimen/_5sdp"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/imageViewCard"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/_5sdp"/>
+
+</com.google.android.material.card.MaterialCardView>
