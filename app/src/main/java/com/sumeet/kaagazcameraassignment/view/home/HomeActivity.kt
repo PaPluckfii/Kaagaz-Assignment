@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() , NewAlbumDialog.AlbumDialogListener , 
     }
 
     private fun setRecyclerView() {
-        albumsAdapter = AlbumsAdapter(albumList,this, thumbnailList)
+        albumsAdapter = AlbumsAdapter(albumList,this)
         binding.albumRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = albumsAdapter

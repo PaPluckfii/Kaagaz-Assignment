@@ -190,6 +190,9 @@ class CameraActivity : AppCompatActivity() {
             val intent = Intent(this, AlbumActivity::class.java)
             startActivity(intent)
         }
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
 }

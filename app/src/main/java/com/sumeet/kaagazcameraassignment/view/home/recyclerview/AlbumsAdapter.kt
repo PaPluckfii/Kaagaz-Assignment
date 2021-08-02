@@ -10,7 +10,6 @@ import com.sumeet.kaagazcameraassignment.data.AlbumEntity
 class AlbumsAdapter(
     private var list : List<AlbumEntity>,
     private val listener: AlbumItemClickListener,
-    private val thumbnail : List<String>
 ) : RecyclerView.Adapter<AlbumsViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -21,7 +20,7 @@ class AlbumsAdapter(
     }
 
     override fun onBindViewHolder(holder: AlbumsViewHolder, position: Int) {
-        return holder.setData(list[position], thumbnail[position])
+        return holder.setData(list[position])
     }
 
     override fun getItemCount(): Int {

@@ -14,13 +14,10 @@ class AlbumsViewHolder(
     private val listener: AlbumItemClickListener
 ) : RecyclerView.ViewHolder(view){
 
-    fun setData(albumEntity: AlbumEntity, thumbnail : String) {
+    fun setData(albumEntity: AlbumEntity) {
         itemView.tvAlbumName.text = albumEntity.name
         itemView.tvAlbumCreationDate.text = TimeAgo.from(albumEntity.timestamp)
-        if(thumbnail == "")
             Glide.with(itemView).load(R.drawable.nothing_here_dog).into(itemView.ivAlbumThumbnail)
-        else
-            Glide.with(itemView).load(thumbnail.toUri()).into(itemView.ivAlbumThumbnail)
 
         itemView.setOnClickListener{
             listener.onItemClicked(albumEntity)
